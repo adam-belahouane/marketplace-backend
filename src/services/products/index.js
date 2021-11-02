@@ -98,16 +98,20 @@ productsRouter.post(
 );
 
 
-productsRouter.get("/", async (req, res, next) => {
-  try {
-    const fileAsBuffer = await getProducts();
-   // const fileAsString = fileAsBuffer.toString();
-    // const fileAsJSON = JSON.parse(fileAsString);
-    res.send(fileAsBuffer);
-  } catch (error) {
-    res.send(500).send({ message: error.message });
-  }
-});
+// productsRouter.get("/", async (req, res, next) => {
+//   try {
+//     const fileAsBuffer = await getProducts();
+//    // const fileAsString = fileAsBuffer.toString();
+//     // const fileAsJSON = JSON.parse(fileAsString);
+//     res.send(fileAsBuffer);
+//   } catch (error) {
+//     res.send(500).send({ message: error.message });
+//   }
+// });
+
+productsRouter.get("/", productHandlers.getAll)
+
+
 
 //*BELOW gets all the reviews for a specific product*/
 
@@ -128,61 +132,60 @@ productsRouter.get("/:id/reviews", async (req, res, next) =>{
 
   })
 
+  productsRouter.get("/:id", productHandlers.getProductById)
 
-productsRouter.get("/:id", async (req, res, next) => {
-  try {
-    const products = await getProducts();
 
-    // const fileAsString = fileAsBuffer.toString();
+// productsRouter.get("/:id", async (req, res, next) => {
+//   try {
+//     const products = await getProducts();
 
-    // const fileAsJSONArray = JSON.parse(fileAsString);
+//     // const fileAsString = fileAsBuffer.toString();
 
-    const product = products.find(
-      (product) => product._id === req.params.id
-    );
-    if (!product) {
-      res
-        .status(404)
-        .send({ message: `Product with ${req.params.id} is not found!` });
-    }
+//     // const fileAsJSONArray = JSON.parse(fileAsString);
 
-    res.status(200).send(product);
-  } catch (error) {
-    res.send(500).send({ message: error.message });
-  }
-});
+//     const product = products.find(
+//       (product) => product._id === req.params.id
+//     );
+//     if (!product) {
+//       res
+//         .status(404)
+//         .send({ message: `Product with ${req.params.id} is not found!` });
+//     }
 
-productsRouter.put("/:id", async (req, res, next) => {
-  try {
-    const products = await getProducts();
+//     res.status(200).send(product);
+//   } catch (error) {
+//     res.send(500).send({ message: error.message });
+//   }
+// });
 
-    // const fileAsString = fileAsBuffer.toString();
+productsRouter.put("/:id", productHandlers.editProductById)
 
-    // let fileAsJSONArray = JSON.parse(fileAsString);
+// productsRouter.put("/:id", async (req, res, next) => {
+//   try {
+//     const products = await getProducts();
 
-    const productIndex = products.findIndex(
-      (product) => product.id === req.params.id
-    );
-    if (!productIndex == -1) {
-      res
-        .status(404)
-        .send({ message: `Product with ${req.params.id} is not found!` });
-    }
-    const previousProductData = products[productIndex];
-    const changedProduct = {
-      ...previousProductData,
-      ...req.body,
-      updatedAt: new Date(),
-      id: req.params.id,
-    };
-    products[productIndex] = changedProduct;
-    writeProductsToFile(products)
-    //fs.writeFileSync(productsFilePath, JSON.stringify(fileAsJSONArray));
-    res.status(200).send(changedProduct);
-  } catch (error) {
-    res.send(500).send({ message: error.message });
-  }
-});
+//     const productIndex = products.findIndex(
+//       (product) => product.id === req.params.id
+//     );
+//     if (!productIndex == -1) {
+//       res
+//         .status(404)
+//         .send({ message: `Product with ${req.params.id} is not found!` });
+//     }
+//     const previousProductData = products[productIndex];
+//     const changedProduct = {
+//       ...previousProductData,
+//       ...req.body,
+//       updatedAt: new Date(),
+//       id: req.params.id,
+//     };
+//     products[productIndex] = changedProduct;
+//     writeProductsToFile(products)
+//     res.status(200).send(changedProduct);
+//   } catch (error) {
+//     res.send(500).send({ message: error.message });
+//   }
+// });
 
 
 // const parseFile = multer()
@@ -224,33 +227,33 @@ productsRouter.put("/:id", async (req, res, next) => {
 //   }
 // );
 
+productsRouter.delete("/:id", productHandlers.deleteUserById)
 
 
+// productsRouter.delete("/:id", async (req, res, next) => {
+//   try {
+//     const products = await getProducts();
 
-productsRouter.delete("/:id", async (req, res, next) => {
-  try {
-    const products = await getProducts();
+//    // const fileAsString = fileAsBuffer.toString();
 
-   // const fileAsString = fileAsBuffer.toString();
+//    // let fileAsJSONArray = JSON.parse(fileAsString);
 
-   // let fileAsJSONArray = JSON.parse(fileAsString);
-
-    const product = products.find(
-      (prod) => prod._id === req.params.id
-    );
-    if (!product) {
-      res
-        .status(404)
-        .send({ message: `Product with ${req.params.id} is not found!` });
-    }else {
-    const afterDeletion = products.filter(
-      (prod) => prod._id !== req.params.id
-    );
-    writeProductsToFile(afterDeletion)
-    res.status(204).send("Deletion complete");}
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-});
+//     const product = products.find(
+//       (prod) => prod._id === req.params.id
+//     );
+//     if (!product) {
+//       res
+//         .status(404)
+//         .send({ message: `Product with ${req.params.id} is not found!` });
+//     }else {
+//     const afterDeletion = products.filter(
+//       (prod) => prod._id !== req.params.id
+//     );
+//     writeProductsToFile(afterDeletion)
+//     res.status(204).send("Deletion complete");}
+//   } catch (error) {
+//     res.status(500).send({ message: error.message });
+//   }
+// });
 
 export default productsRouter;
