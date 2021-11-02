@@ -51,7 +51,7 @@ const editProductById = async (req, res, next) => {
   }
 };
 
-const deleteUserById = async (req, res, next) => {
+const deleteProductById = async (req, res, next) => {
   try {
     await pool.query("DELETE FROM products WHERE id=$1", [req.params.id]);
     res.status(204).send();
@@ -65,7 +65,7 @@ const productHandlers = {
   getAll,
   getProductById,
   editProductById,
-  deleteUserById,
+  deleteProductById,
 };
 
 export default productHandlers;

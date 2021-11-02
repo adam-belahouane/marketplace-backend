@@ -18,10 +18,10 @@ const getReviews = async (req, res, next) => {
 
 const createReview = async (req, res, next) => {
   try {
-    const { comment, rate, product_id } = req.body;
+    const { comment, rate } = req.body;
     const data = await pool.query(
       "INSERT INTO reviews(comment, rate, product_id) VALUES($1, $2, $3) RETURNING *;",
-      [comment, rate, product_id]
+      [comment, rate, req.params.id]
     );
     res.send(data.rows[0]);
   } catch (error) {
@@ -31,10 +31,10 @@ const createReview = async (req, res, next) => {
 
 const editReviewById = async (req, res, next) => {
   try {
-    const { comment, rate, product_id } = req.body;
+    const { comment, rate } = req.body;
     const data = await pool.query(
       "UPDATE reviews SET comment=$1, rate=$2, product_id=$3, updated_at=$4 WHERE id=$5 RETURNING *;",
-      [comment, rate, product_id, new Date, req.params.reviewId]
+      [comment, rate, req.params.id, new Date, req.params.reviewId]
     );
     res.send(data.rows[0]);
   } catch (error) {
@@ -54,3 +54,5 @@ const deleteReviewById = async (req, res, next) => {
 const reviews = {
     getReviews, createReview, editReviewById, deleteReviewById
 }
+
+export default reviews
