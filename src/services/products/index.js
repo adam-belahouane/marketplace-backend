@@ -7,49 +7,49 @@ import { getProducts, getReviews, writeProductsToFile, saveImages } from "../../
 import multer from "multer";
 import { validationResult } from "express-validator";
 // import { parseFile, uploadFile } from "../utils/upload/index.js";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const productsFilePath = path.join(__dirname, "products.json");
+import productHandlers from "./handlers.js";
 const productsRouter = express.Router();
 
 // Post Product
 
-productsRouter.post("/", productValidation, async (req, res, next) => {
-  try {
-    const errorsList = validationResult(req);
-    if (!errorsList.isEmpty()) {
-      next(createHttpError(400, { errorsList }));
-    } else {
-        const { name, description, brand, imageUrl, price, category } = req.body;
-        const product = {
-          _id: uniqid(),
-    
-          name,
-          description,
-          brand,
-          imageUrl,
-          price,
-          category,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        };
-    
-        const products = await getProducts();
-        // const fileAsString = fileAsBuffer.toString();
-        // const fileAsJSONArray = JSON.parse(fileAsString);
-    
-        products.push(product);
-        
-        writeProductsToFile(products)
-       // fs.writeFileSync(productsFilePath, JSON.stringify(fileAsJSONArray));
-    
-        res.status(200).send(product);
+productsRouter.post("/", productHandlers.createProduct)
 
-    }
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-});
+// productsRouter.post("/", productValidation, async (req, res, next) => {
+//   try {
+//     const errorsList = validationResult(req);
+//     if (!errorsList.isEmpty()) {
+//       next(createHttpError(400, { errorsList }));
+//     } else {
+//         const { name, description, brand, imageUrl, price, category } = req.body;
+//         const product = {
+//           _id: uniqid(),
+    
+//           name,
+//           description,
+//           brand,
+//           imageUrl,
+//           price,
+//           category,
+//           createdAt: new Date(),
+//           updatedAt: new Date(),
+//         };
+    
+//         const products = await getProducts();
+//         // const fileAsString = fileAsBuffer.toString();
+//         // const fileAsJSONArray = JSON.parse(fileAsString);
+    
+//         products.push(product);
+        
+//         writeProductsToFile(products)
+//        // fs.writeFileSync(productsFilePath, JSON.stringify(fileAsJSONArray));
+    
+//         res.status(200).send(product);
+
+//     }
+//   } catch (error) {
+//     res.status(500).send({ message: error.message });
+//   }
+// });
 
 // Post Product Image
 
