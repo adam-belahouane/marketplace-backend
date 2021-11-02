@@ -14,44 +14,6 @@ const productsRouter = express.Router();
 
 productsRouter.post("/", productHandlers.createProduct)
 
-// productsRouter.post("/", productValidation, async (req, res, next) => {
-//   try {
-//     const errorsList = validationResult(req);
-//     if (!errorsList.isEmpty()) {
-//       next(createHttpError(400, { errorsList }));
-//     } else {
-//         const { name, description, brand, imageUrl, price, category } = req.body;
-//         const product = {
-//           _id: uniqid(),
-    
-//           name,
-//           description,
-//           brand,
-//           imageUrl,
-//           price,
-//           category,
-//           createdAt: new Date(),
-//           updatedAt: new Date(),
-//         };
-    
-//         const products = await getProducts();
-//         // const fileAsString = fileAsBuffer.toString();
-//         // const fileAsJSONArray = JSON.parse(fileAsString);
-    
-//         products.push(product);
-        
-//         writeProductsToFile(products)
-//        // fs.writeFileSync(productsFilePath, JSON.stringify(fileAsJSONArray));
-    
-//         res.status(200).send(product);
-
-//     }
-//   } catch (error) {
-//     res.status(500).send({ message: error.message });
-//   }
-// });
-
-// Post Product Image
 
 productsRouter.post(
   "/:id/upload",
@@ -98,16 +60,6 @@ productsRouter.post(
 );
 
 
-// productsRouter.get("/", async (req, res, next) => {
-//   try {
-//     const fileAsBuffer = await getProducts();
-//    // const fileAsString = fileAsBuffer.toString();
-//     // const fileAsJSON = JSON.parse(fileAsString);
-//     res.send(fileAsBuffer);
-//   } catch (error) {
-//     res.send(500).send({ message: error.message });
-//   }
-// });
 
 productsRouter.get("/", productHandlers.getAll)
 
@@ -116,50 +68,40 @@ productsRouter.get("/", productHandlers.getAll)
 //*BELOW gets all the reviews for a specific product*/
 
 
-productsRouter.get("/:id/reviews", async (req, res, next) =>{
-    try{
-      console.log(req)
-      const reviews  = await getReviews()
-      const findReviews = reviews.find(rev => rev.productId === req.params.id)
-      if(findReviews){
-        res.send({findReviews})
-      } else {
-        next(createHttpError(404, `Reviews with the id ${req.params.id} don't exist` ))
-      }
-    }catch(error){
-      next(error)
-    }
+// productsRouter.get("/:id/reviews", async (req, res, next) =>{
+//     try{
+//       console.log(req)
+//       const reviews  = await getReviews()
+//       const findReviews = reviews.find(rev => rev.productId === req.params.id)
+//       if(findReviews){
+//         res.send({findReviews})
+//       } else {
+//         next(createHttpError(404, `Reviews with the id ${req.params.id} don't exist` ))
+//       }
+//     }catch(error){
+//       next(error)
+//     }
 
-  })
+//   })
+
+
+
 
   productsRouter.get("/:id", productHandlers.getProductById)
 
 
-// productsRouter.get("/:id", async (req, res, next) => {
-//   try {
-//     const products = await getProducts();
+  
+  productsRouter.put("/:id", productHandlers.editProductById)
+  
+  
+  
+  
+  productsRouter.delete("/:id", productHandlers.deleteUserById)
+  
 
-//     // const fileAsString = fileAsBuffer.toString();
-
-//     // const fileAsJSONArray = JSON.parse(fileAsString);
-
-//     const product = products.find(
-//       (product) => product._id === req.params.id
-//     );
-//     if (!product) {
-//       res
-//         .status(404)
-//         .send({ message: `Product with ${req.params.id} is not found!` });
-//     }
-
-//     res.status(200).send(product);
-//   } catch (error) {
-//     res.send(500).send({ message: error.message });
-//   }
-// });
-
-productsRouter.put("/:id", productHandlers.editProductById)
-
+  
+  export default productsRouter;
+  
 // productsRouter.put("/:id", async (req, res, next) => {
 //   try {
 //     const products = await getProducts();
@@ -187,12 +129,11 @@ productsRouter.put("/:id", productHandlers.editProductById)
 //   }
 // });
 
-
 // const parseFile = multer()
 // productsRouter.put(
-//   "/:id/avatar",
-//   parseFile.single("avatar"),
-//   uploadFile,
+  //   "/:id/avatar",
+  //   parseFile.single("avatar"),
+  //   uploadFile,
 //   async (req, res, next) => {
 //     try {
 //       const products =  await getProducts();
@@ -226,34 +167,3 @@ productsRouter.put("/:id", productHandlers.editProductById)
 //     }
 //   }
 // );
-
-productsRouter.delete("/:id", productHandlers.deleteUserById)
-
-
-// productsRouter.delete("/:id", async (req, res, next) => {
-//   try {
-//     const products = await getProducts();
-
-//    // const fileAsString = fileAsBuffer.toString();
-
-//    // let fileAsJSONArray = JSON.parse(fileAsString);
-
-//     const product = products.find(
-//       (prod) => prod._id === req.params.id
-//     );
-//     if (!product) {
-//       res
-//         .status(404)
-//         .send({ message: `Product with ${req.params.id} is not found!` });
-//     }else {
-//     const afterDeletion = products.filter(
-//       (prod) => prod._id !== req.params.id
-//     );
-//     writeProductsToFile(afterDeletion)
-//     res.status(204).send("Deletion complete");}
-//   } catch (error) {
-//     res.status(500).send({ message: error.message });
-//   }
-// });
-
-export default productsRouter;
