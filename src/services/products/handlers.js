@@ -60,12 +60,23 @@ const deleteProductById = async (req, res, next) => {
   }
 };
 
+const updateProductImage = async(req, res, next) => {
+  try {
+    const image_url = req.file.path;
+    const data = await pool.query("UPDATE products SET imageurl=$1 WHERE id=$2 RETURNING *;", [image_url, req.params.id]);
+    res.send(data.rows[0])
+  } catch (error) {
+    next(error)
+  }
+}
+
 const productHandlers = {
   createProduct,
   getAll,
   getProductById,
   editProductById,
   deleteProductById,
+  updateProductImage
 };
 
 export default productHandlers;
